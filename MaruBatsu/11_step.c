@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 SDL_Window* window;
-SDL_Renderer* render;
+SDL_Renderer* renderer;
 
 SDL_Surface* maru;
 SDL_Texture* maru_tex;
@@ -18,27 +18,27 @@ void stage_kaku(void)
 {
     SDL_Rect drawRect;
 
-    SDL_SetRenderDrawColor(render, 128, 128, 128, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(render);
+    SDL_SetRenderDrawColor(renderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     drawRect = (SDL_Rect){130,0,5,400};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
     drawRect = (SDL_Rect){265,0,5,400};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
     drawRect = (SDL_Rect){0,130,400,5};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
     drawRect = (SDL_Rect){0,265,400,5};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
 
     for (int tate=0; tate<3; tate++) {
         for (int yoko=0; yoko<3; yoko++) {
             drawRect = (SDL_Rect){(130+5)*yoko,(130+5)*tate,130,130};
-            SDL_RenderCopy(render, maru_tex, &marubatsu_rect, &drawRect);
+            SDL_RenderCopy(renderer, maru_tex, &marubatsu_rect, &drawRect);
         }
     }
 
-    SDL_RenderPresent(render);
+    SDL_RenderPresent(renderer);
 }
 
 int main(int argc, char **argv)
@@ -49,13 +49,13 @@ int main(int argc, char **argv)
     IMG_Init(IMG_INIT_PNG);
 
     window = SDL_CreateWindow("○×ゲーム", 100, 100, 400, 400, SDL_WINDOW_SHOWN);
-    render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     maru = IMG_Load("data/maru.png");
-    maru_tex = SDL_CreateTextureFromSurface(render, maru);
+    maru_tex = SDL_CreateTextureFromSurface(renderer, maru);
 
     batsu = IMG_Load("data/batsu.png");
-    batsu_tex = SDL_CreateTextureFromSurface(render, batsu);
+    batsu_tex = SDL_CreateTextureFromSurface(renderer, batsu);
 
     marubatsu_rect = (SDL_Rect){0,0,130,130};
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
     SDL_DestroyTexture(maru_tex);
     SDL_FreeSurface(maru);
 
-    SDL_DestroyRenderer(render);
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
     IMG_Quit();

@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 SDL_Window* window;
-SDL_Renderer* render;
+SDL_Renderer* renderer;
 
 SDL_Surface* maru;
 SDL_Texture* maru_tex;
@@ -32,7 +32,7 @@ void stage_wo_0(void)
 {
     for (int tate=0; tate<3; tate++) {
         for (int yoko=0; yoko<3; yoko++) {
-            stage[tate][yoko] = 0;
+            stage[yoko][tate] = 0;
         }
     }
 }
@@ -43,8 +43,8 @@ void stage_kousinn(void)
         for (int yoko=0; yoko<3; yoko++) {
             if ((135*tate) <= mouse_y && mouse_y < (130+135*tate)) {
                 if ((135*yoko) <= mouse_x && mouse_x < (130+135*yoko)) {
-                    if (stage[tate][yoko] == 0) {
-                        stage[tate][yoko] = player;
+                    if (stage[yoko][tate] == 0) {
+                        stage[yoko][tate] = player;
                         Mix_PlayMusic(sound, 1);
                         if (player == 1) {
                             player = 2;
@@ -86,7 +86,7 @@ void winnner_hantei(void)
         winner = 3;
         for (int tate=0; tate<3; tate++) {
             for (int yoko=0; yoko<3; yoko++) {
-                if (stage[tate][yoko] == 0) {
+                if (stage[yoko][tate] == 0) {
                     winner = 0;
                 }
             }
@@ -98,26 +98,26 @@ void stage_kaku(void)
 {
     SDL_Rect drawRect;
 
-    SDL_SetRenderDrawColor(render, 128, 128, 128, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(render);
+    SDL_SetRenderDrawColor(renderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(render, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     drawRect = (SDL_Rect){130,0,5,400};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
     drawRect = (SDL_Rect){265,0,5,400};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
     drawRect = (SDL_Rect){0,130,400,5};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
     drawRect = (SDL_Rect){0,265,400,5};
-    SDL_RenderFillRect(render, &drawRect);
+    SDL_RenderFillRect(renderer, &drawRect);
 
     for (int tate=0; tate<3; tate++) {
         for (int yoko=0; yoko<3; yoko++) {
             drawRect = (SDL_Rect){(130+5)*yoko,(130+5)*tate,130,130};
-            if (stage[tate][yoko] == 1) {
-                SDL_RenderCopy(render, maru_tex, &marubatsu_rect, &drawRect);
-            } else if (stage[tate][yoko] == 2) {
-                SDL_RenderCopy(render, batsu_tex, &marubatsu_rect, &drawRect);
+            if (stage[yoko][tate] == 1) {
+                SDL_RenderCopy(renderer, maru_tex, &marubatsu_rect, &drawRect);
+            } else if (stage[yoko][tate] == 2) {
+                SDL_RenderCopy(renderer, batsu_tex, &marubatsu_rect, &drawRect);
             }
         }
     }
@@ -125,19 +125,19 @@ void stage_kaku(void)
     if (winner != 0) {
         drawRect = (SDL_Rect){(400-390)/2, (400-150)/2, 390, 150};
         if (winner == 3) {
-            SDL_RenderCopy(render, draw_tex, &windraw_rect, &drawRect);
+            SDL_RenderCopy(renderer, draw_tex, &windraw_rect, &drawRect);
         }else{
-            SDL_RenderCopy(render, win_tex, &windraw_rect, &drawRect);
+            SDL_RenderCopy(renderer, win_tex, &windraw_rect, &drawRect);
             drawRect = (SDL_Rect){(400-390)/2+5, (400-150)/2+5, 130, 130};
             if (winner == 1){
-                SDL_RenderCopy(render, maru_tex, &marubatsu_rect, &drawRect);
+                SDL_RenderCopy(renderer, maru_tex, &marubatsu_rect, &drawRect);
             }else{
-                SDL_RenderCopy(render, batsu_tex, &marubatsu_rect, &drawRect);
+                SDL_RenderCopy(renderer, batsu_tex, &marubatsu_rect, &drawRect);
             }
         }
     }
 
-    SDL_RenderPresent(render);
+    SDL_RenderPresent(renderer);
 }
 
 int main(int argc, char **argv)
@@ -150,21 +150,21 @@ int main(int argc, char **argv)
     Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
 
     window = SDL_CreateWindow("○×ゲーム", 100, 100, 400, 400, SDL_WINDOW_SHOWN);
-    render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     maru = IMG_Load("data/maru.png");
-    maru_tex = SDL_CreateTextureFromSurface(render, maru);
+    maru_tex = SDL_CreateTextureFromSurface(renderer, maru);
 
     batsu = IMG_Load("data/batsu.png");
-    batsu_tex = SDL_CreateTextureFromSurface(render, batsu);
+    batsu_tex = SDL_CreateTextureFromSurface(renderer, batsu);
 
     marubatsu_rect = (SDL_Rect){0,0,130,130};
 
     win_image = IMG_Load("data/win.png");
-    win_tex = SDL_CreateTextureFromSurface(render, win_image);
+    win_tex = SDL_CreateTextureFromSurface(renderer, win_image);
 
     draw_image = IMG_Load("data/draw.png");
-    draw_tex = SDL_CreateTextureFromSurface(render, draw_image);
+    draw_tex = SDL_CreateTextureFromSurface(renderer, draw_image);
 
     windraw_rect = (SDL_Rect){0, 0, 390, 150};
 
@@ -183,7 +183,8 @@ int main(int argc, char **argv)
                 break;
             } else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                 if (winner == 0) {
-                    SDL_GetMouseState(&mouse_x, &mouse_y);
+                    mouse_x = event.button.x;
+                    mouse_y = event.button.y;
                     stage_kousinn();
                 }
             }
@@ -203,7 +204,7 @@ int main(int argc, char **argv)
     SDL_DestroyTexture(maru_tex);
     SDL_FreeSurface(maru);
 
-    SDL_DestroyRenderer(render);
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
     Mix_CloseAudio();

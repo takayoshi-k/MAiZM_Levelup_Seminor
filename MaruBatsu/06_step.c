@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 SDL_Window* window;
-SDL_Renderer* render;
+SDL_Renderer* renderer;
 
 int main(int argc, char **argv)
 {
@@ -14,17 +14,17 @@ int main(int argc, char **argv)
 
     window = SDL_CreateWindow("○×ゲーム", 100, 100, 400, 400, SDL_WINDOW_SHOWN);
 
-    render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawColor(render, 128, 128, 128, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(render);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_SetRenderDrawColor(renderer, 128, 128, 128, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
 
     // テキストを見て、ここに幅5の線を4本表示するコードを書いてみよう。
 
-    SDL_RenderPresent(render);
+    SDL_RenderPresent(renderer);
 
     SDL_Delay(3000);
 
-    SDL_DestroyRenderer(render);
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
     SDL_Quit();
